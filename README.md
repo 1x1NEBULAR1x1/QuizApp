@@ -199,3 +199,7 @@ Projekt został zrealizowany przy użyciu następujących technologii:
    - Visual Studio Code
    - .NET CLI
    - Entity Framework Core Tools 
+
+## Autorzy
+
+- Kyrylo Belichenko 
