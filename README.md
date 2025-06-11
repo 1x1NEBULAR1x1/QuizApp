@@ -8,6 +8,7 @@
 5. [Funkcjonalności](#funkcjonalności)
 6. [Modele danych](#modele-danych)
 7. [Technologie](#technologie)
+8. [Autorzy](#autorzy)
 
 ## Wprowadzenie
 
@@ -202,4 +203,4 @@ Projekt został zrealizowany przy użyciu następujących technologii:
 
 ## Autorzy
 
-- Kyrylo Belichenko 
+- Kyrylo Belichenko nr. albumu 142897
