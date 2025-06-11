@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Welcome to Quiz App</h1>
+        <p class="lead">Create, take and analyze quizzes with our easy-to-use platform</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-list-check fs-1 text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Browse Quizzes</h5>
+                    <p class="card-text">Explore and take quizzes created by other users.</p>
+                    <a asp-controller="Quizzes" asp-action="Browse" class="btn btn-primary">Browse Quizzes</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-pencil-square fs-1 text-success"></i>
+                    </div>
+                    <h5 class="card-title">Create Quiz</h5>
+                    <p class="card-text">Create your own quiz with multiple-choice questions.</p>
+                    <a asp-controller="Quizzes" asp-action="Create" class="btn btn-success">Create Quiz</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-clipboard-data fs-1 text-info"></i>
+                    </div>
+                    <h5 class="card-title">My Dashboard</h5>
+                    <p class="card-text">Manage your quizzes and view your quiz attempts.</p>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Quizzes" asp-action="Index" class="btn btn-info">My Quizzes</a>
+                        <a asp-controller="QuizAttempts" asp-action="Index" class="btn btn-outline-info">My Attempts</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Quiz Statistics</h5>
+                    <p class="card-text">View detailed statistics about your quizzes.</p>
+                    <a asp-controller="Statistics" asp-action="Index" class="btn btn-outline-primary">View
+                        Statistics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

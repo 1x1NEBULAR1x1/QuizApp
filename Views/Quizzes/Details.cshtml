@@ -1,0 +1,111 @@
+@model QuizApp.Models.Quiz
+
+@{
+    ViewData["Title"] = "Quiz Details";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>@Model.Title</h1>
+            <p class="lead">@Model.Description</p>
+            <p class="text-muted">Created on: @Model.CreatedAt.ToString("MMM dd, yyyy")</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div class="btn-group">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                    <i class="bi bi-pencil me-1"></i>Edit Quiz
+                </a>
+                <a asp-controller="Questions" asp-action="Create" asp-route-quizId="@Model.Id" class="btn btn-success">
+                    <i class="bi bi-plus-circle me-1"></i>Add Question
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            @if (Model.Questions.Count == 0)
+            {
+                <div class="alert alert-info">
+                    This quiz doesn't have any questions yet.
+                    <a asp-controller="Questions" asp-action="Create" asp-route-quizId="@Model.Id" class="alert-link">Add a
+                        question</a> to get started.
+                </div>
+            }
+            else
+            {
+                <h3>Questions (@Model.Questions.Count)</h3>
+
+                @foreach (var question in Model.Questions)
+                {
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@question.Text</h5>
+                            <span class="badge bg-primary">@question.Points pts</span>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                @foreach (var answer in question.Answers)
+                                {
+                                    <li class="list-group-item @(answer.IsCorrect ? "list-group-item-success" : "")">
+                                        @if (answer.IsCorrect)
+                                        {
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        }
+                                        @answer.Text
+                                    </li>
+                                }
+                            </ul>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-controller="Questions" asp-action="Edit" asp-route-id="@question.Id"
+                                    class="btn btn-outline-primary">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                                <a asp-controller="Questions" asp-action="Delete" asp-route-id="@question.Id"
+                                    class="btn btn-outline-danger">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quiz Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><strong>Questions:</strong> @Model.Questions.Count</li>
+                        <li><strong>Total Points:</strong> @Model.Questions.Sum(q => q.Points)</li>
+                        <li><strong>Attempts:</strong> @Model.Attempts.Count</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quiz Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Statistics" asp-action="Details" asp-route-id="@Model.Id"
+                            class="btn btn-outline-info">
+                            <i class="bi bi-bar-chart me-2"></i>View Statistics
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to My Quizzes
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger mt-2">
+                            <i class="bi bi-trash me-2"></i>Delete Quiz
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

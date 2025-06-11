@@ -1,0 +1,93 @@
+@model QuizApp.ViewModels.QuizResultViewModel
+
+@{
+  ViewData["Title"] = "Quiz Results";
+}
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h1>Quiz Results: @Model.QuizTitle</h1>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Score: @Model.Score / @Model.TotalPossibleScore</h4>
+          <h5>@Model.ScorePercentage.ToString("0.##")%</h5>
+          <p class="text-muted">Completed on: @Model.CompletedAt.ToString("MM/dd/yyyy HH:mm")</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          @if (Model.ScorePercentage >= 80)
+          {
+            <div class="badge bg-success p-3 fs-5">Excellent</div>
+          }
+          else if (Model.ScorePercentage >= 60)
+          {
+            <div class="badge bg-primary p-3 fs-5">Good</div>
+          }
+          else if (Model.ScorePercentage >= 40)
+          {
+            <div class="badge bg-warning p-3 fs-5">Fair</div>
+          }
+          else
+          {
+            <div class="badge bg-danger p-3 fs-5">Needs Improvement</div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Questions</h2>
+
+  @foreach (var question in Model.Questions)
+  {
+    <div class="card mb-4">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">@question.QuestionText</h5>
+          <span class="badge @(question.IsCorrect ? "bg-success" : "bg-danger")">
+            @(question.IsCorrect ? "Correct" : "Incorrect")
+          </span>
+        </div>
+        <p class="text-muted mb-0">Points: @(question.IsCorrect? question.Points: 0) / @question.Points</p>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <p class="mb-1">Your answer:</p>
+          <div
+            class="p-2 rounded @(question.UserAnswer.IsCorrect ? "bg-success bg-opacity-10" : "bg-danger bg-opacity-10")">
+            @question.UserAnswer.AnswerText
+            @if (question.UserAnswer.IsCorrect)
+            {
+              <i class="bi bi-check-circle-fill text-success ms-2"></i>
+            }
+            else
+            {
+              <i class="bi bi-x-circle-fill text-danger ms-2"></i>
+            }
+          </div>
+        </div>
+
+        @if (!question.IsCorrect)
+        {
+          <div>
+            <p class="mb-1">Correct answer:</p>
+            <div class="p-2 rounded bg-success bg-opacity-10">
+              @question.CorrectAnswer.AnswerText
+              <i class="bi bi-check-circle-fill text-success ms-2"></i>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex mb-4">
+    <a asp-controller="QuizAttempts" asp-action="Index" class="btn btn-primary">My Attempts</a>
+    <a asp-controller="Quizzes" asp-action="Browse" class="btn btn-outline-secondary">Browse Quizzes</a>
+  </div>
+</div>

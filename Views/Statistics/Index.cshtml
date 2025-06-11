@@ -1,0 +1,57 @@
+@model IEnumerable<QuizApp.ViewModels.QuizStatisticsViewModel>
+
+@{
+  ViewData["Title"] = "Quiz Statistics";
+}
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h1>Quiz Statistics</h1>
+      <p class="lead">View statistics for your quizzes</p>
+    </div>
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="alert alert-info">
+      You haven't created any quizzes yet, or no one has attempted your quizzes.
+    </div>
+  }
+  else
+  {
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      @foreach (var item in Model)
+      {
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-header">
+              <h5 class="card-title mb-0">@item.QuizTitle</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Attempts</h6>
+                <span class="badge bg-primary rounded-pill">@item.AttemptCount</span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Average Score</h6>
+                <span
+                  class="badge @(item.AverageScore >= 70 ? "bg-success" : item.AverageScore >= 40 ? "bg-warning" : "bg-danger") rounded-pill">
+                  @item.AverageScore.ToString("0.##")%
+                </span>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-top-0">
+              <a asp-action="Details" asp-route-id="@item.QuizId" class="btn btn-primary w-100">View Details</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="mt-4">
+    <a asp-controller="Quizzes" asp-action="Index" class="btn btn-secondary">My Quizzes</a>
+  </div>
+</div>

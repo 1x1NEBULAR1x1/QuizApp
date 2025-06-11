@@ -1,0 +1,108 @@
+@model IEnumerable<QuizApp.Models.QuizAttempt>
+
+@{
+    ViewData["Title"] = "My Quiz Attempts";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>My Quiz Attempts</h1>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You haven't attempted any quizzes yet. 
+            <a asp-controller="Quizzes" asp-action="Browse" class="alert-link">Browse quizzes</a> to get started.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Quiz</th>
+                        <th>Started</th>
+                        <th>Completed</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var attempt in Model)
+                    {
+                        <tr>
+                            <td>@attempt.Quiz.Title</td>
+                            <td>@attempt.StartedAt.ToString("MM/dd/yyyy HH:mm")</td>
+                            <td>
+                                @if (attempt.CompletedAt.HasValue)
+                                {
+                                    @attempt.CompletedAt.Value.ToString("MM/dd/yyyy HH:mm")
+                                }
+                                else
+                                {
+                                    <span class="text-warning">In Progress</span>
+                                }
+                            </td>
+                            <td>
+                                @if (attempt.CompletedAt.HasValue)
+                                {
+                                    <span>@attempt.Score / @attempt.TotalPossibleScore (@(((double)attempt.Score / attempt.TotalPossibleScore * 100).ToString("0.##"))%)</span>
+                                }
+                                else
+                                {
+                                    <span>--</span>
+                                }
+                            </td>
+                            <td>
+                                @if (attempt.CompletedAt.HasValue)
+                                {
+                                    double percentage = (double)attempt.Score / attempt.TotalPossibleScore * 100;
+                                    @if (percentage >= 80)
+                                    {
+                                        <span class="badge bg-success">Excellent</span>
+                                    }
+                                    else if (percentage >= 60)
+                                    {
+                                        <span class="badge bg-primary">Good</span>
+                                    }
+                                    else if (percentage >= 40)
+                                    {
+                                        <span class="badge bg-warning">Fair</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Needs Improvement</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Incomplete</span>
+                                }
+                            </td>
+                            <td>
+                                @if (attempt.CompletedAt.HasValue)
+                                {
+                                    <a asp-action="Results" asp-route-id="@attempt.Id" class="btn btn-sm btn-outline-primary">Results</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Take" asp-route-id="@attempt.Id" class="btn btn-sm btn-outline-warning">Continue</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Quizzes" asp-action="Browse" class="btn btn-primary">Browse Quizzes</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Home</a>
+    </div>
+</div> 

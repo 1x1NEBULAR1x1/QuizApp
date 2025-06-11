@@ -1,0 +1,82 @@
+@model QuizApp.Models.Quiz
+
+@{
+    ViewData["Title"] = "Delete Quiz";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Delete Quiz</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Warning</h5>
+                </div>
+                <div class="card-body">
+                    <h4>Are you sure you want to delete this quiz?</h4>
+                    <p class="lead text-danger">This action cannot be undone. All questions, answers, and user attempts
+                        will be permanently deleted.</p>
+
+                    <dl class="row mt-4">
+                        <dt class="col-sm-3">Quiz Title</dt>
+                        <dd class="col-sm-9">@Model.Title</dd>
+
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Description) ? "No description" :
+                            Model.Description)</ dd >
+
+                        <dt class="col-sm-3">Created At</dt>
+                        <dd class="col-sm-9">@Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-3">Questions</dt>
+                        <dd class="col-sm-9">@Model.Questions.Count</dd>
+
+                        <dt class="col-sm-3">Attempts</dt>
+                        <dd class="col-sm-9">@Model.Attempts.Count</dd>
+                    </dl>
+
+                    <form asp-action="Delete" class="mt-4">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-2"></i>Delete Quiz
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">What will be deleted</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="bi bi-file-earmark-text me-2"></i>Quiz data and metadata
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-question-circle me-2"></i>All @Model.Questions.Count questions
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check2-square me-2"></i>All answers for all questions
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-clipboard-data me-2"></i>All user attempts and statistics
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

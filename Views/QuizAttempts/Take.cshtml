@@ -1,0 +1,49 @@
+@model QuizApp.ViewModels.TakeQuizViewModel
+
+@{
+  ViewData["Title"] = "Take Quiz";
+}
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h1>@Model.QuizTitle</h1>
+      <p class="lead">Answer all questions and submit your answers</p>
+    </div>
+  </div>
+
+  <form asp-action="Submit" method="post">
+    <input type="hidden" asp-for="AttemptId" />
+
+    @for (var i = 0; i < Model.Questions.Count; i++)
+    {
+      var question = Model.Questions[i];
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Question @(i + 1): @question.QuestionText</h5>
+          <p class="text-muted mb-0">Points: @question.Points</p>
+        </div>
+        <div class="card-body">
+          <input type="hidden" name="Answers[@i].QuestionId" value="@question.QuestionId" />
+
+          @foreach (var answer in question.Answers)
+          {
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="Answers[@i].AnswerId"
+                id="answer_@question.QuestionId@answer.AnswerId" value="@answer.AnswerId" required>
+              <label class="form-check-label" for="answer_@question.QuestionId@answer.AnswerId">
+                @answer.AnswerText
+              </label>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="d-grid gap-2 d-md-flex mb-4">
+      <button type="submit" class="btn btn-primary btn-lg">Submit Quiz</button>
+      <a asp-controller="Quizzes" asp-action="Browse" class="btn btn-outline-secondary btn-lg">Cancel</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,168 @@
+@model QuizApp.ViewModels.QuestionFormViewModel
+
+@{
+    ViewData["Title"] = "Add Question";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Add Question</h1>
+            <p class="lead">Quiz: @Model.QuizTitle</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="QuizId" />
+                        <input type="hidden" asp-for="QuizTitle" />
+
+                        <div class="mb-3">
+                            <label asp-for="Text" class="form-label">Question Text</label>
+                            <textarea asp-for="Text" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Text" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Points" class="form-label">Points</label>
+                            <input asp-for="Points" class="form-control" type="number" min="1" max="100" />
+                            <span asp-validation-for="Points" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <h4>Answers</h4>
+                        <p class="text-muted">Select one correct answer and provide at least two options</p>
+
+                        <div class="answers-container">
+                            @for (var i = 0; i < Model.Answers.Count; i++)
+                            {
+                                <div class="card mb-3 answer-card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <div class="mb-2">
+                                                    <label class="form-label">Answer @(i + 1)</label>
+                                                    <textarea asp-for="Answers[i].Text" class="form-control"
+                                                        rows="2"></textarea>
+                                                    <span asp-validation-for="Answers[i].Text" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-check mt-4">
+                                                    <input class="form-check-input answer-correct" type="radio"
+                                                        name="correctAnswer" value="true"
+                                                        @(Model.Answers[i].IsCorrect ? "checked" : "") />
+                                                    <label class="form-check-label">
+                                                        Correct Answer
+                                                    </label>
+                                                    <input type="hidden" asp-for="Answers[i].IsCorrect"
+                                                        class="is-correct-hidden" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-4">
+                            <button type="button" id="add-answer" class="btn btn-outline-primary">
+                                <i class="bi bi-plus-circle"></i> Add Answer Option
+                            </button>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex mt-4">
+                            <button type="submit" class="btn btn-primary">Save Question</button>
+                            <a asp-controller="Quizzes" asp-action="Edit" asp-route-id="@Model.QuizId"
+                                class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tips</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Be clear and concise with your question</li>
+                        <li>Provide at least two answer options</li>
+                        <li>You can add as many answer options as needed</li>
+                        <li>Select exactly one correct answer</li>
+                        <li>Set appropriate point value based on difficulty</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Handle correct answer radio buttons
+            $('.answer-correct').change(function () {
+                // Reset all hidden fields
+                $('.is-correct-hidden').val('false');
+
+                // Set the selected one to true
+                if ($(this).is(':checked')) {
+                    $(this).siblings('.is-correct-hidden').val('true');
+                }
+            });
+
+            // Add new answer option
+            $('#add-answer').click(function () {
+                var answersCount = $('.answer-card').length;
+                var newIndex = answersCount;
+                
+                var newAnswerHtml = `
+                    <div class="card mb-3 answer-card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="mb-2">
+                                        <label class="form-label">Answer ${newIndex + 1}</label>
+                                        <textarea name="Answers[${newIndex}].Text" id="Answers_${newIndex}__Text" class="form-control" rows="2"></textarea>
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="Answers[${newIndex}].Text" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input answer-correct" type="radio" name="correctAnswer" value="true" />
+                                        <label class="form-check-label">
+                                            Correct Answer
+                                        </label>
+                                        <input type="hidden" name="Answers[${newIndex}].IsCorrect" id="Answers_${newIndex}__IsCorrect" class="is-correct-hidden" value="false" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $('.answers-container').append(newAnswerHtml);
+                
+                // Re-attach event handler to new radio button
+                $('.answer-correct').off('change').change(function () {
+                    $('.is-correct-hidden').val('false');
+                    if ($(this).is(':checked')) {
+                        $(this).siblings('.is-correct-hidden').val('true');
+                    }
+                });
+            });
+        });
+    </script>
+}

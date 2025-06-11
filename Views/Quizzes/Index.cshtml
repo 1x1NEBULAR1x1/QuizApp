@@ -1,0 +1,56 @@
+@model IEnumerable<QuizApp.Models.Quiz>
+
+@{
+    ViewData["Title"] = "My quizzes";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>My quizzes</h1>
+        </div>
+        <div class="col-auto">
+            <a asp-action="Create" class="btn btn-primary">Create new quiz</a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You don't have any quizzes yet. Create a new quiz using the button above.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">@item.Title</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@(string.IsNullOrEmpty(item.Description) ? "No description" : item.Description)
+                            </p>
+                            <p class="text-muted small">Created: @item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
+                            <p class="text-muted small">Questions: @item.Questions.Count</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0">
+                            <div class="btn-group w-100">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Details</a>
+                                <a asp-controller="Statistics" asp-action="Details" asp-route-id="@item.Id"
+                                    class="btn btn-outline-success">Statistics</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to home</a>
+    </div>
+</div>

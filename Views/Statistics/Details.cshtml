@@ -1,0 +1,94 @@
+@model QuizApp.ViewModels.QuizDetailedStatisticsViewModel
+
+@{
+  ViewData["Title"] = "Detailed Statistics";
+}
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h1>Statistics: @Model.QuizTitle</h1>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Summary</h4>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Total Attempts
+              <span class="badge bg-primary rounded-pill">@Model.AttemptCount</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Average Score
+              <span
+                class="badge @(Model.AverageScore >= 70 ? "bg-success" : Model.AverageScore >= 40 ? "bg-warning" : "bg-danger") rounded-pill">
+                @Model.AverageScore.ToString("0.##")%
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Question Statistics</h2>
+
+  @foreach (var question in Model.QuestionStatistics)
+  {
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>@question.QuestionText</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Answer</th>
+                <th>Status</th>
+                <th>Selected By</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var answer in question.AnswerStatistics)
+              {
+                <tr class="@(answer.IsCorrect ? "table-success" : "")">
+                  <td>@answer.AnswerText</td>
+                  <td>
+                    @if (answer.IsCorrect)
+                    {
+                      <span class="badge bg-success">Correct</span>
+                    }
+                    else
+                    {
+                      <span class="badge bg-danger">Incorrect</span>
+                    }
+                  </td>
+                  <td>@answer.SelectionCount participant(s)</td>
+                  <td>
+                    <div class="progress">
+                      <div class="progress-bar @(answer.IsCorrect ? "bg-success" : "bg-danger")" role="progressbar"
+                        style="width: @answer.SelectionPercentage%;" aria-valuenow="@answer.SelectionPercentage"
+                        aria-valuemin="0" aria-valuemax="100">
+                        @answer.SelectionPercentage.ToString("0.##")%
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="mt-4">
+    <a asp-action="Index" class="btn btn-primary">Back to Statistics</a>
+    <a asp-controller="Quizzes" asp-action="Index" class="btn btn-secondary">My Quizzes</a>
+  </div>
+</div>

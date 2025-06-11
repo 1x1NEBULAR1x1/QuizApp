@@ -1,0 +1,49 @@
+@model IEnumerable<QuizApp.Models.Quiz>
+
+@{
+  ViewData["Title"] = "Available quizzes";
+}
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h1>Available quizzes</h1>
+      <p class="lead">Select a quiz to start</p>
+    </div>
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="alert alert-info">
+      No quizzes are available at the moment.
+    </div>
+  }
+  else
+  {
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      @foreach (var item in Model)
+      {
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-header">
+              <h5 class="card-title mb-0">@item.Title</h5>
+            </div>
+            <div class="card-body">
+              <p class="card-text">@(string.IsNullOrEmpty(item.Description) ? "No description" : item.Description)</p>
+              <p class="text-muted small">Author: @(item.User?.UserName ?? "Unknown")</p>
+              <p class="text-muted small">Created: @item.CreatedAt.ToString("dd.MM.yyyy")</p>
+            </div>
+            <div class="card-footer bg-transparent border-top-0">
+              <a asp-controller="QuizAttempts" asp-action="Start" asp-route-id="@item.Id"
+                class="btn btn-success w-100">Start quiz</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to home</a>
+  </div>
+</div>
